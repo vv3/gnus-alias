@@ -1430,6 +1430,24 @@ PREFIX is an optional prefeix to each header block."
               (vector alias `(gnus-alias-use-identity ,alias) t))
             identities)))
 
+(defun gnus-alias-next-identity ()
+  (let* ((identities (mapcar 'car gnus-alias-identity-alist))
+         (curr-indx
+          (or
+           (position gnus-alias-current-identity identities :test #'equal)
+           0))
+         (next-indx
+          (if (eq 1 (- (length gnus-alias-identity-alist) curr-indx))
+              0
+            (+ 1 curr-indx))))
+    (nth next-indx identities)))
+
+(defun gnus-alias-cycle-identities ()
+  (interactive)
+  (gnus-alias-use-identity (gnus-alias-next-identity)))
+
+;; (define-key message-mode-map [(control f8)]  'gnus-alias-cycle-identities)
+
 ;;; **************************************************************************
 ;;; ***** we're done
 ;;; **************************************************************************
